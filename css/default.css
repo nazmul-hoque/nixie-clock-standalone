@@ -1,0 +1,49 @@
+/* Nixie Clock Styles */
+
+/* Base digit styling */
+.digit {
+    color: #fff88a;
+    font-size: 800%;
+    padding: 1.5rem;
+    text-shadow: 0 0 8px #fc792c, 0 0 16px #fc792c, 0 0 24px #fc792c, 0 0 32px #fc792c, 
+                 0 0 40px #fc792c, 0 0 48px #fc792c, 0 0 56px #fc792c, 0 0 64px #fc792c;
+}
+
+/* Dot sizes for different clock sizes */
+.digit.dot-mini { font-size: 100%; }
+.digit.dot-small { font-size: 200%; }
+.digit.dot-medium { font-size: 300%; }
+.digit.dot-large { font-size: 400%; }
+
+/* Clock display container */
+.digit_display {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+/* Reflection effect - mirror-like surface */
+.reflect {
+    -webkit-box-reflect: below 0px linear-gradient(to bottom, 
+        rgba(255,255,255,0.15) 0%, 
+        rgba(255,255,255,0.08) 15%, 
+        rgba(0,0,0,0.2) 30%, 
+        rgba(0,0,0,0.4) 60%, 
+        rgba(0,0,0,0.8) 100%);
+}
+
+/* Nixie tube sizes */
+.tube-mini { width: 40px; }
+.tube-small { width: 80px; }
+.tube-medium { width: 120px; }
+.tube-large { width: 160px; }
+
+/* Timezone title */
+.timezone-title {
+    color: #fff88a;
+    text-align: center;
+    font-size: 2.25rem;
+    font-weight: lighter;
+    text-shadow: 0 0 8px #fc792c, 0 0 16px #fc792c, 0 0 24px #fc792c, 0 0 32px #fc792c, 
+                 0 0 40px #fc792c, 0 0 48px #fc792c, 0 0 56px #fc792c, 0 0 64px #fc792c;
+}

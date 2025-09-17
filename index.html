@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nixie Clock</title>
+    <link rel="stylesheet" href="css/default.css">
+    <style>
+        /* Layout */
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .clock-container {
+            text-align: center;
+        }
+        
+        /* Modern Controls Panel */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            width: 320px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .controls h3 {
+            margin: 0 0 20px 0;
+            color: #ffffff;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            gap: 8px;
+        }
+        
+        .control-group label {
+            font-size: 14px;
+            color: #e0e0e0;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .control-group select, 
+        .control-group input[type="text"] {
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-group select:focus, 
+        .control-group input[type="text"]:focus {
+            outline: none;
+            border-color: #fc792c;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(252, 121, 44, 0.1);
+        }
+        
+        .control-group select:hover, 
+        .control-group input[type="text"]:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .control-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #fc792c;
+            cursor: pointer;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        /* Modern Toggle Button */
+        .toggle-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            backdrop-filter: blur(20px);
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+        
+        .toggle-controls:hover {
+            background: rgba(25, 25, 25, 0.95);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        
+        .toggle-controls span {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .controls.hidden {
+            display: none;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .controls {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: auto;
+                border-radius: 0 0 16px 16px;
+                border-left: none;
+                border-right: none;
+                border-top: none;
+                margin: 0;
+            }
+            
+            .toggle-controls {
+                top: 16px;
+                right: 16px;
+                width: 44px;
+                height: 44px;
+            }
+            
+            .toggle-controls span {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="clock-container">
+            <div id="nixie-clock"></div>
+        </div>
+    </div>
+    
+    <div class="toggle-controls" onclick="toggleControls()">
+        <span>⚙️</span>
+    </div>
+    
+    <div class="controls hidden" id="controls">
+        <h3>Settings</h3>
+        
+        <div class="control-group">
+            <label for="size">Display Size</label>
+            <select id="size">
+                <option value="mini">Mini</option>
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large" selected>Large</option>
+            </select>
+        </div>
+        
+        <div class="checkbox-group">
+            <input type="checkbox" id="reflection" checked>
+            <label for="reflection">Reflection Effect</label>
+        </div>
+        
+        <div class="control-group">
+            <label for="timeFormat">Time Format</label>
+            <select id="timeFormat">
+                <option value="12">12 Hour</option>
+                <option value="24" selected>24 Hour</option>
+            </select>
+        </div>
+        
+        <div class="checkbox-group">
+            <input type="checkbox" id="displaySeconds" checked>
+            <label for="displaySeconds">Show Seconds</label>
+        </div>
+        
+        <div class="control-group">
+            <label for="displayDateInterval">Date Display Interval</label>
+            <select id="displayDateInterval">
+                <option value="0">Never</option>
+                <option value="1">Every minute</option>
+                <option value="2" selected>Every 2 minutes</option>
+                <option value="3">Every 3 minutes</option>
+                <option value="4">Every 4 minutes</option>
+                <option value="5">Every 5 minutes</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="displayDateTime">Date Display Duration</label>
+            <select id="displayDateTime">
+                <option value="1">1 second</option>
+                <option value="2">2 seconds</option>
+                <option value="3" selected>3 seconds</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="timezone">Timezone</label>
+            <input type="text" id="timezone" placeholder="default" value="default">
+        </div>
+        
+        <div class="control-group">
+            <label for="timezoneTitle">Timezone Title</label>
+            <input type="text" id="timezoneTitle" placeholder="default" value="default">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+    <script src="nixie-clock-standalone.js"></script>
+    <script>
+        function toggleControls() {
+            document.getElementById('controls').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
